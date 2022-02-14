@@ -1,0 +1,9 @@
+.link-not-highlighted {
+    text-decoration: none;
+    color: inherit;
+}
+
+.link-not-highlighted:hover {
+    text-decoration: underline;
+    color: inherit;
+}

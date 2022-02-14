@@ -1,0 +1,71 @@
+<!doctype html>
+{% load static %}
+{% load jobstory_extras %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style-fix.css' %}">
+  </head>
+  <body>
+    <div class="container-fluid">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tableSettingsModal">
+            Settings
+        </button>
+        <!-- modal -->
+        <div class="modal fade" id="tableSettingsModal" tabindex="-1" aria-labelledby="tableSettingsModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{% url 'index' %}" method="post">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="tableSettingsModalLabel">Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    {% csrf_token %}
+                    {{ form.as_bs_form }}
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Apply</button>
+                  </div>
+                </form>
+            </div>
+          </div>
+        </div>
+        <!-- end modal -->
+        {% with fields=meta.get_fields %}
+            <table class="table table-sm table-bordered table-hover">
+                <thead>
+                    <tr>
+                    {% for f in fields %}
+                        <th>
+                        {% field_header f 'link-not-highlighted' %}
+                        </th>
+                    {% endfor %}
+                    </tr>
+                </thead>
+                {% if task_list %}
+                    {% for t in task_list %}
+                        <tr>
+                            {% for f in fields %}
+                                <td>
+                                {% if f.name == 'dev_name' %}
+                                    <a class="link-not-highlighted" href="http://{% field_val t f 'example.com' %}" target="_blank">
+                                    {% field_val t f '-' %}
+                                    </a>
+                                {% else %}
+                                    {% field_val t f '-' %}
+                                {% endif%}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </table>
+        {% endwith %}
+    </div>
+    <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+  </body>
+</html>
